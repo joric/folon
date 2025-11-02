@@ -1,0 +1,73 @@
+  "doors": {
+    "a": {
+      "ref_id": "070D46A8",
+      "coordinates": [
+        -87213.820312,
+        68819.125,
+        5095.466309
+      ]
+    },
+    "b": {
+      "ref_id": "071168D3",
+      "coordinates": [
+        -34.234386,
+        3077.590332,
+        168
+      ]
+    }
+  },
+  "area": "LondonWorld"
+
+
+  "doors": {
+    "a": {
+      "ref_id": "073246EA",
+      "coordinates": [
+        -1129.48938,
+        1768.682739,
+        -10.246826
+      ]
+    },
+    "b": {
+      "ref_id": "071168D3",
+      "coordinates": [
+        -34.234386,
+        3077.590332,
+        168
+      ]
+    }
+  },
+
+unassigned weapons workbench 0729E3B4
+
+
+            //c := WinningOverride(LinksTo(ElementByPath(a, 'XTEL\Door')));
+
+            //if Assigned(b) then AddMessage('b is assigned');
+            //if Assigned(c) then AddMessage('c is assigned');
+
+            //AddMessage('seems assigned');
+
+            //if not ElementExists(b, 'XTEL') then Continue;
+
+            (*
+            //DoorObj := ChildObj.O['doors'].AddObject;
+
+            //DoorObj.S['a'
+
+            door_id := IntToHex(GetLoadOrderFormID(a), 8);
+            other_door := IntToHex(GetLoadOrderFormID(b), 8);
+
+            ChildObj.O['doors'].S[ door_id ] := other_door;
+            ChildObj.O['doors'].O[ door_id ].A['a'].Add ( ax );
+            ChildObj.O['doors'].O[ door_id ].A['a'].Add ( ay );
+            ChildObj.O['doors'].O[ door_id ].A['a'].Add ( az );
+
+            ChildObj.O['doors'].O[ door_id ].A['b'].Add ( bx );
+            ChildObj.O['doors'].O[ door_id ].A['b'].Add ( by );
+            ChildObj.O['doors'].O[ door_id ].A['b'].Add ( bz );
+            *)
+
+
+
+
