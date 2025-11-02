@@ -380,7 +380,7 @@ begin
   AddMessage(Format('Collected %d items total', [count]));
 
   AddMessage('Saving markers.json...');
-  Obj.SaveToFile(extractfilepath(paramstr(0)) + '../markers.json', False, TEncoding.UTF8, True);
+  Obj.SaveToFile(extractfilepath(paramstr(0)) + '../data/markers.json', False, TEncoding.UTF8, True);
 
 end;
 
