@@ -117,7 +117,8 @@
       "Chemistry Station": {"match": "WorkbenchChemistry", "fa": "flask"},
       "Ammo Workbench": {"match": "AmmoWorkbench", "fa": "list-ul"},
       "Sleeping Bag": {"match": "SleepingBag", "fa": "bed-pulse",  "type": "Sleeping Bag", "bg":"darkorange", "group_fa":"bed-pulse"},
-      "Bed": {"match": "NpcBed", "fa": "bed", "type": "Bed", "group_fa":"bed"}
+      "Bed": {"match": "NpcBed", "fa": "bed", "type": "Bed", "group_fa":"bed"},
+      "Bed2": {"match": "Bed", "fa": "bed", "type": "Bed", "group_fa":"bed"}
     }
    },
 
