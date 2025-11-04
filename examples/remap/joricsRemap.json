@@ -8,8 +8,8 @@
           131072
         ]
       },
-      "image": "https://joric.github.io/folon/images/LondonWorld.jpg",
-      "markers": "https://joric.github.io/folon/examples/remap/geojson.markers.folon.json",
+      "image": "../../images/LondonWorld.jpg",
+      "markers": "geojson.markers.folon.json",
       "corners": [
         {
           "lat": 51.567501756256505,
