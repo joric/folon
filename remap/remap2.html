@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">  
+<title>Joric's Remap 2 - Leaflet</title>
+<link rel="shortcut icon" type="image/x-icon" href="data:," />
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet.path.drag@0.0.6/src/Path.Drag.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-path-transform@1.8.0-beta.4/dist/L.Path.Transform.min.js"></script>
+
+<!--script src="L.Path.Transform-src.js"></script-->
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet-toolbar@0.4.0-alpha.2/dist/leaflet.toolbar.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-toolbar@0.4.0-alpha.2/dist/leaflet.toolbar.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.6.5/split.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet-draw@1.0.4/dist/leaflet.draw.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-draw@1.0.4/dist/leaflet.draw.min.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet-switch-basemap@1.0.6/src/L.switchBasemap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-switch-basemap@1.0.6/src/L.switchBasemap.min.css">
+
+<style>
+
+html, body { margin: 0; padding: 0; }
+
+.split {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100vh;
+}
+
+.gutter {
+  background-color: #eee;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+  cursor: col-resize;
+}
+
+.leaflet-control-toolbar {
+  margin-top: 2px;
+}
+
+.leaflet-control-toolbar a {
+  color: #444;
+}
+
+</style>
+
+<div class="split">
+  <div class="split left" id="map"></div>
+  <div class="split right" id="map2"></div>
+</div>
+
+<script>
+
+function editSettings() {
+  // Create the dialog container
+  let dialog = document.createElement('div');
+  dialog.className = 'leaflet-popup leaflet-zoom-animated';
+
+  // Create the content wrapper
+  let contentWrapper = document.createElement('div');
+  contentWrapper.className = 'leaflet-popup-content-wrapper';
+  dialog.appendChild(contentWrapper);
+
+  // Create the content
+  let content = document.createElement('div');
+  content.className = 'leaflet-popup-content';
+  content.innerHTML = '<p>This is a dialog styled as a Leaflet popup.</p>';
+  contentWrapper.appendChild(content);
+
+  // Create the close button
+  let closeButton = document.createElement('a');
+  closeButton.className = 'leaflet-popup-close-button';
+  closeButton.href = '#close';
+  closeButton.innerHTML = '&#215;'; // HTML entity for 
+  closeButton.onclick = function(event) {
+    event.preventDefault();
+    document.body.removeChild(dialog);
+  };
+  dialog.appendChild(closeButton);
+
+  // Append the dialog to the body
+  document.body.appendChild(dialog);
+
+  //document.querySelector('.leaflet-popup-pane').appendChild(dialog);
+
+  dialog.style.position = 'absolute';
+  dialog.style.left = '300px';
+  dialog.style.top = '300px';
+  dialog.style.zIndex = '1000';
+
+  /*
+  // Position the dialog in the center of the viewport
+  dialog.style.position = 'fixed';
+  dialog.style.left = '50%';
+  dialog.style.top = '50%';
+  dialog.style.transform = 'translate(-50%, -50%)';
+  dialog.style.zIndex = '1000';
+  */
+}
+
+function getBaseLayers() {
+  let baseLayers = {};
+
+  baseLayers['CartoDB Voyager'] = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 20
+  });
+
+  baseLayers['Esri World Imagery'] = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+  });
+
+  baseLayers['Esri World Street Map'] = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+  });
+
+  baseLayers['OpenStreetMap Mapnik'] = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
+
+  baseLayers['OSM Humanitarian'] = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
+  });
+
+  baseLayers['Google Satellite'] = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3'],
+    attribution: '<a href="https://cloud.google.com/maps-platform/terms?hl=es-419">Google Satellite</a>'
+  });
+
+  baseLayers['Google Streets'] = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3'],
+    attribution: '<a href="https://cloud.google.com/maps-platform/terms?hl=es-419">Google Streets</a>'
+  });
+
+  baseLayers['Google Hybrid'] = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3'],
+    attribution: '<a href="https://cloud.google.com/maps-platform/terms?hl=es-419">Google Hybrid</a>'
+  });
+
+  baseLayers['Google Terrain'] = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3'],
+    attribution: '<a href="https://cloud.google.com/maps-platform/terms?hl=es-419">Google Terrain</a>'
+  });
+
+  baseLayers['Google Traffic'] = L.tileLayer('https://{s}.google.com/vt/lyrs=m@221097413,traffic&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    minZoom: 2,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+    attribution: '<a href="https://cloud.google.com/maps-platform/terms?hl=es-419">Google Traffic</a>'
+  });
+
+  baseLayers['Yandex MapJS'] = new L.TileLayer('https://core-renderer-tiles.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}&lang=en', {
+      reuseTiles: true, 
+      updateWhenIdle: false,
+      attribution: '<a href="https://yandex.ru/legal/maps_api/">Yandex Maps</a>'
+  });
+
+  baseLayers['Yandex Satellite'] = new L.TileLayer('https://core-sat.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}&lang=en', {
+      reuseTiles: true, 
+      updateWhenIdle: false,
+      attribution: '<a href="https://yandex.ru/legal/maps_api/">Yandex Satellite</a>'
+  });
+
+  return baseLayers;
+}
+
+window.onload = function() {
+
+  /*
+  L.Coordinate = (x, y) => Array.isArray(x) ? [x[0], x[1]] : [x, y];
+  L.Marker.include({
+    getCoordinate: function() {
+      const latLng = this.getLatLng();
+      return L.Coordinate(latLng.lng, latLng.lat);
+    }
+  });
+  */
+
+  let markersURL = 'geojson.markers.folon.json';
+
+  let w = h = 4096*64;
+  let x = y = w/2;
+  let tileSize = 512;
+
+  let a = 1 / tileSize;
+  let b = tileSize / 2;// * (0.5 - x / w);
+  let c = - 1 / tileSize;
+  let d = tileSize / 2;// * (0.5 - y / h);
+  let crs = L.CRS.Simple;
+
+  // Represents an affine transformation: a set of coefficients a, b, c, d for transforming
+  // a point of a form (x, y) into (a*x + b, c*y + d) and doing the reverse.
+  crs.transformation = new L.Transformation(a, b, c, d);
+
+  //crs.projection.project = latlng => new L.Point(latlng.lng, latlng.lat);
+  //crs.projection.unproject = point => new L.LatLng(point.y, point.x);
+
+  const map = L.map('map', {
+    crs: crs,
+    zoom: 0,
+    center: [-256,256],
+    //zoomControl: false,
+  });
+
+  let tilesLayer = L.tileLayer('https://joric.github.io/folon/tiles/LondonWorld/{z}/{x}/{y}.png', {
+    attribution: '<a href="https://github.com/joric/maps/wiki/">Joric\'s Tilesets</a>',
+    tileSize: tileSize,
+    maxNativeZoom: 2,
+    noWrap: true,
+  }).addTo(map);
+
+  let markersLayer = new L.layerGroup().addTo(map);
+
+  let baseLayers = {
+    'LondonWorld': tilesLayer
+  }
+
+  let layers = {
+    'Markers': markersLayer
+  }
+
+
+  fetch(markersURL).then(r=>r.json()).then(data=>{
+    L.geoJSON(data, {
+      filter: feature => feature.properties.area='LondonWorld',
+      pointToLayer: function (feature, latlng) {
+        let marker = L.marker(latlng, {
+          draggable: true,
+          opacity: 1,
+          //icon: fontAwesomeIcon,
+        });
+        return marker;
+      },
+    }).bindPopup(marker => { return '<pre>'+JSON.stringify(marker.feature, null, 2)+'</pre>' + String(marker.getLatLng())})
+      .bindTooltip(marker => marker.feature.properties.title)
+      .addTo(markersLayer)
+  })
+
+  // draw setup
+
+  const drawnItems = new L.FeatureGroup();
+  map.addLayer(drawnItems);
+
+  w = h = 4096*64;
+  x = y = -w/2;
+
+  /*
+ L.polygon([
+   [x,y],
+   [w+x,y],
+   [w+x,h+y],
+   [x,h+y],
+ ]).addTo(drawnItems);
+ */
+
+ L.rectangle([
+   [x,y],
+   [w+x,h+y],
+ ]).addTo(drawnItems);
+
+
+  layers['Polygons'] = drawnItems;
+
+  const drawControl = new L.Control.Draw({
+    edit: {
+      featureGroup: drawnItems,
+      poly: {
+        allowIntersection: false
+      }
+    },
+    draw: {
+      rectangle: true,
+      polygon: {
+        allowIntersection: false,
+        showArea: false,
+      },
+      polyline: false,
+      circle: false,
+      marker: false,
+      circlemarker: false
+    },
+  });
+  map.addControl(drawControl);
+
+  map.on(L.Draw.Event.CREATED, function(event) {
+    const layer = event.layer;
+    drawnItems.addLayer(layer);
+  });
+
+  map.on('draw:edited', function(event) {
+    const layers = event.layers;
+    layers.eachLayer(function(layer) {
+      // Handle the edited layer
+    });
+  });
+
+
+
+  // add toolbar
+  let ImmediateAction = L.Toolbar2.Action.extend({
+    initialize: function(map, myAction) {
+      L.Toolbar2.Action.prototype.initialize.call(this);
+      this.disableTime = Date.now();
+      map.on('click', () => {
+        this.disable();
+      });
+    },
+    enable: function() {
+      if (Date.now() - this.disableTime > 100) {
+        L.Toolbar2.Action.prototype.enable.call(this);
+      }
+    },
+    disable: function() {
+      if (this._enabled) {
+        this.disableTime = Date.now();
+      }
+      L.Toolbar2.Action.prototype.disable.call(this);
+    },
+  });
+
+  let ImmediateSubAction = L.Toolbar2.Action.extend({
+    initialize: function(map, myAction) {
+      this.map = map;
+      this.myAction = myAction;
+      L.Toolbar2.Action.prototype.initialize.call(this);
+    },
+    addHooks: function() {
+      this.myAction.disable();
+    }
+  });
+
+  let cancelAction = ImmediateSubAction.extend({
+      options: {
+          toolbarIcon: {
+              html: '<i class="fa fa-times"></i>',
+              tooltip: 'Cancel'
+          }
+      }
+  });
+
+  function action(tooltip, icon, actions) {
+    return ImmediateAction.extend({
+      options: {
+        toolbarIcon: {
+          html: icon,
+          tooltip: tooltip,
+        },
+        subToolbar: new L.Toolbar2({
+          actions: [...actions, cancelAction],
+        })
+      },
+    });
+  }
+
+  function subAction(html, callback, tooltip) {
+    return ImmediateSubAction.extend({
+      options: {
+          toolbarIcon: {
+              html: html,
+              tooltip: tooltip||html,
+          }
+      },
+      addHooks: function () {
+          if (typeof callback === 'function') {
+              callback();
+          }
+          ImmediateSubAction.prototype.addHooks.call(this);
+      }
+    });
+  }
+
+  new L.Toolbar2.Control({
+    position: 'topleft',
+    actions: [
+      action('Edit Data', '<i class="fa-regular fa-image"></i>',[
+        subAction('Edit Settings', editSettings),
+        subAction('Reset Settings'),
+      ]),
+      action('Import Data', '<i class="fa fa-upload"></i>',[
+        subAction('Import Settings'),
+        subAction('Import Markers'),
+      ]),
+      action('Export Data', '<i class="fa fa-download"></i>',[
+        subAction('Export Settings'),
+        subAction('Export Markers'),
+      ]),
+    ],
+  }).addTo(map);
+
+  // add layers control
+  L.control.layers(baseLayers, layers, {
+    collapsed: false,
+  }).addTo(map);
+
+
+  // map2 setup
+
+  let london = [51.505, -0.09];
+
+  let map2 = L.map('map2', {
+    zoom: 13,
+    center: london,
+  });
+
+  function baseLayerChange(map, name) {
+    let center = map.getCenter();
+    if (name.match( /yandex/gi )) {
+      map.options.crs = L.CRS.EPSG3395;
+    } else {
+      map.options.crs = L.CRS.EPSG3857;
+    }
+    map.setView(center);
+    map._resetView(map.getCenter(), map.getZoom());
+  }
+
+  function addBaseLayer(map, baseLayers, layerName) {
+    map.on('baselayerchange', function(e) {
+      baseLayerChange(map, e.name);
+    });
+    for (const [name, layer] of Object.entries(baseLayers)) {
+      if (!layerName || layerName == name) {
+        map.addLayer(layer);
+        baseLayerChange(map, name);
+        break;
+      }
+    }
+    return baseLayers;
+  }
+
+  L.control.layers(addBaseLayer(map2, getBaseLayers()), {}, {
+    collapsed: true,
+  }).addTo(map2);
+
+  // splitter setup
+
+  new ResizeObserver(() => { map.invalidateSize() }).observe(document.querySelector('#map'));
+  new ResizeObserver(() => { map2.invalidateSize() }).observe(document.querySelector('#map2'));
+
+  // Standard
+  Split(['.split .left', '.split .right'], {
+    minSize: 0,
+    snapOffset: 30,
+  });
+
+  // editable path setup
+
+  w = 0.010; h = w*2;
+  x = london[0];
+  y = london[1]-0.04;
+
+  let polygons = [
+    L.polygon([
+      [51.509, -0.08],
+      [51.503, -0.06],
+      [51.51, -0.047],
+    ],{transform: true}),
+    /*
+    L.polygon([
+      [51.509, -0.10],
+      [51.503, -0.16],
+      [51.51, -0.147],
+      [51.52, -0.147],
+    ],{transform: true}),
+    */
+    L.rectangle([
+      [x,y],
+      [w+x,h+y],
+    ],{transform:true}),
+  ];
+
+/*
+var map = L.map('map-canvas').setView(center, zoom);
+var polygon = L.polygon([..., ...], { transform: true }).addTo(map);
+
+polygon.transform.enable();
+// or partially:
+polygon.transform.enable({rotation: true, scaling: false});
+// or, on an already enabled handler:
+polygon.transform.setOptions({rotation: true, scaling: false});
+If you have changed the geometry of the transformed layer and want the tool to reflect the changes, use:
+
+// you have changed the geometry here
+layer.setLatLngs([...]);
+// and want to update handlers:
+layer.transform.reset();
+*/
+
+  for (polygon of polygons) {
+
+    polygon.addTo(map2);
+
+    polygon.dragging.enable();
+
+    polygon.transform.enable({
+      rotation: true,
+      scaling: true,
+      uniformScaling: false,
+      handleLength: 20,
+    });
+  }
+
+  function setUniformScaling(enable) {
+    for (polygon of polygons) {
+      polygon.transform.enable({
+        uniformScaling: enable,
+      });
+    }
+  }
+
+
+  new L.Toolbar2.Control({
+    position: 'topleft',
+    actions: [
+      action('Scale', '<i class="fa-solid fa-up-right-and-down-left-from-center"></i>',[
+        subAction('Uniform', ()=>{ setUniformScaling(true); }),
+        subAction('Non-Uniform', ()=>{ setUniformScaling(false); }),
+      ]),
+    ],
+  }).addTo(map2);
+
+  L.Handler.PathTransform.prototype._onScaleEnd = function() {
+    delete this._scaleStarted; // important
+    this._map
+      .off('mousemove touchmove', this._onScale, this)
+      .off('mouseup touchend', this._onScaleEnd, this);
+    if (this._handleLine) this._map.addLayer(this._handleLine);
+    if (this._rotationMarker) this._map.addLayer(this._rotationMarker);
+    this._apply();
+    this._path.fire('scaleend', {
+      layer: this._path,
+      scale: this._scale.clone(),
+    });
+  }
+
+  // scaleStart isn't called for some reason
+  L.Handler.PathTransform.prototype._onScale = function(evt) {
+    if (!this._scaleStarted) {
+      this._scaleStarted = true;
+      var handlers = this._handlers;
+
+      this._rotationOriginPt = this._map.latLngToLayerPoint( this._getRotationOrigin() );
+
+      let o = this._rotationOriginPt;
+
+      var a = handlers[0]._point;
+      var b = handlers[1]._point;
+      var c = handlers[2]._point;
+      var d = handlers[3]._point;
+
+      this._initialAngle = - Math.atan2( d.y - a.y, d.x - a.x);
+
+      console.log('InitialAngle', this._initialAngle)
+      console.log('Center', this._rotationOriginPt);
+      console.log('abcd', a,b,c,d);
+    }
+
+    const originPoint = this._originMarker._point;
+    let ratioX, ratioY;
+    if (this.options.uniformScaling) {
+      ratioX = originPoint.distanceTo(evt.layerPoint) / this._initialDist;
+      ratioY = ratioX;
+    } else {
+      ratioX = (originPoint.x - evt.layerPoint.x) / this._initialDistX;
+      ratioY = (originPoint.y - evt.layerPoint.y) / this._initialDistY;
+    }
+
+    this._scale = L.point(ratioX, ratioY);
+
+    //console.log('scale', this._scale);
+
+    // update matrix
+    if (this.options.uniformScaling) {
+
+      this._matrix = this._initialMatrix.clone().scale(this._scale, originPoint);
+
+    } else {
+
+      const origin = this._rotationOriginPt;
+      let zero = L.point(0,0);
+
+      const angle = this._initialAngle;
+
+      // Create rotation matrices
+      //var rotationMatrix = L.matrix(1, 0, 0, 1, 0, 0).rotate(this._initialAngle, origin);
+      //var inverseRotationMatrix = L.matrix(1, 0, 0, 1, 0, 0).rotate(-this._initialAngle, origin);
+
+      this._matrix =
+        this._initialMatrix
+        .clone()
+        .rotate(-angle, origin)
+        .scale(this._scale, originPoint)
+        .rotate(angle, origin)
+        .flip()
+        //.scale(this._scale, origin)
+    }
+
+    this._update();
+    this._path.fire('scale', {
+      layer: this._path,
+      scale: this._scale.clone(),
+    });
+  };
+}
+
+</script>
+
