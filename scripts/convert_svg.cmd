@@ -1,6 +1,6 @@
 @echo off
 rem npm install svg2geojson
 
-svg2geojson regions.svg -d -o > ..\regions.json
+svg2geojson regions.svg -d -o > ..\data\regions.json
 
 
