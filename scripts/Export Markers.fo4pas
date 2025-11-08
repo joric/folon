@@ -66,7 +66,7 @@ end;
 function Finalize: integer;
 var
   i, j, k, w, count, quests, q, value, cnt, subcount, fid, rid: integer;
-  f, mod_f, mod_f2, g, e, r, area, cell, refs, ref, item, items: IInterface;
+  f, mod_f, g, e, r, area, cell, refs, ref, item, items: IInterface;
   Obj, ChildObj: TJsonObject;
   s, id, section, name: string;
   sList: TStringList;
@@ -82,7 +82,7 @@ begin
   r := RecordByFormID(FileByIndex(0), $00000010, False);
   for i := 0 to Pred(ReferencedByCount(r)) do begin
     e := ReferencedByIndex(r, i);
-    if (GetFile(e) <> mod_f) and (GetFile(e) <> mod_f2) then continue;
+    if GetFile(e) <> mod_f then continue;
     cell := LinksTo(ElementByName(e, 'Cell'));
 
     ChildObj := Obj.A['features'].AddObject;
