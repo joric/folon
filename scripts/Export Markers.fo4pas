@@ -73,7 +73,6 @@ var
   isTeleport, isLocked: boolean;
 begin
   mod_f := FileByIndex(8);
-  mod_f2 := FileByIndex(9);
   count := 0;
 
   Obj := TJsonObject.Create;
