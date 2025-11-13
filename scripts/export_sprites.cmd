@@ -1,6 +1,6 @@
 @echo off
 
-rem 1) use [FO4Tools]() to extract "LondonWorldSpace - Interface.ba2\Interface\Pipboy_MapPage.swf"
+rem 1) use [FO4Tools](https://f4se.silverlock.org) to extract "LondonWorldSpace - Interface.ba2\Interface\Pipboy_MapPage.swf"
 rem 2) use [JPEX](https://github.com/jindrapetrik/jpexs-decompiler/releases/) to save shapes from Pipboy_MapPage.swf
 
 set outdir=.\export
