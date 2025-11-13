@@ -573,8 +573,13 @@ function markerSymbol2(o) {
 
     return {
       markerFile   : image,
-      markerWidth  : size,
-      markerHeight : size,
+
+      //markerWidth  : size,
+      //markerHeight : size,
+
+      markerWidth  : { stops: [[2, 24], [4, 48], [8, 64]] },
+      markerHeight : { stops: [[2, 24], [4, 48], [8, 64]] },
+
       markerDx     : markerDx,
       markerDy     : markerDy,
       markerOpacity: opacity,
