@@ -86,6 +86,11 @@ html, body{margin:0px;height:100%;width:100%;font-family:sans-serif;}
 
     <br/>
 
+    <span id="toggle-sprites" class="button-toggle hidden"><i class="icon fa fa-image"></i>Pipboy Markers</span>
+
+    <br/>
+    <br/>
+
     <a href="https://github.com/joric/folon/wiki/" class="link" target=_blank><span class="fa-brands fa-wikipedia-w"></span> About the Map</a>
 
     </div>
@@ -215,7 +220,8 @@ let settings;
 let counters = {};
 let areas = {};
 let mapBounds = [];
-let types = {};
+let typeData = {};
+let iconData = {};
 let mapId = 'LondonWorld';
 let pressed = {};
 let markers = {};
@@ -466,12 +472,16 @@ function createMap() {
 
 function itemText(text, o, noindex=true) {
   let t = getType(o);
+
+  if (t.title) text = t.title;
+
   for (let [reg, rep] of Object.entries(t.replace||{})) {
     if (noindex && rep.includes('{index}')) return text;
     let index = o.editor_id.match(/^.*(\d\d)$/);
     if (index) rep = rep.replace('{index}', parseInt(index[1]));
     text = text.replace(new RegExp(reg,'g'), rep);
   }
+
   return text.trim();
 }
 
@@ -479,48 +489,145 @@ function itemName(o) {
   return itemText( o.door_name || o.title || 'Unnamed', o, false);
 }
 
-function getType(o) {
-  let defaults = { bg: 'grey', fg: 'white', fa: 'circle-question', group:'misc'};
-  t = {...defaults, type: o.description, group_weight:0, ...(types[o.description] || {})};
-  for (const [key, tt] of Object.entries(t.items||{})) {
-    if (tt.match || tt.cell) {
-      if ( (tt.match && (o.editor_id||o.title).match(new RegExp(tt.match,'g'))) || (tt.cell && o.cell) ) {
-        t = {...t, ...tt, key: key};
-        if (!tt.type) {
-          t = {...t, subtype: key};
-        }
-        return t;
+function parseFAClass(faClass) {
+  const parts = faClass.trim().split(/\s+/);
+  const prefix = parts.find(p => p.startsWith('fa-') || p === 'fa')?.replace('fa-', '') || 'solid';
+  const iconName = parts.find(p => p.startsWith('fa-') && p !== 'fa' && p !== `fa-${prefix}`)?.replace('fa-', '');
+  const prefixMap = { solid: 'fas', regular: 'far', light: 'fal', thin: 'fat', duotone: 'fad', brands: 'fab' };
+  return { prefix: prefixMap[prefix] || 'fas', iconName };
+}
+
+function getIcon(t, useCategoryIcon) {
+  let iconRecord = iconData[useCategoryIcon && t.item ? (t.category_icon || t.icon) : t.icon] || {class: 'fa fa-circle-question'};
+  let fa = parseFAClass(iconRecord.class).iconName;
+  let bg = t.color || iconRecord.background || 'grey';
+  let fg = iconRecord.color || 'white';
+  return {fa: fa, bg :bg, fg:fg, image:iconRecord.image};
+}
+
+function getTypeRecursive(o, prop, data, value) {
+  const parent = Object.fromEntries(Object.entries(data).filter(([k,v]) => typeof v !== 'object' || k=='replace'));
+  prop = {...(prop.icon ? {category_icon: prop.icon} : {}), ...prop, ...parent};
+
+  for (const[field, section] of Object.entries(data.match||{})) {
+    const value = o[field];
+    if (!value) continue;
+
+    // try exact match first (faster)
+    const entry = section[value];
+    if (entry) {
+      return getTypeRecursive(o, prop, entry, value);
+    }
+
+    // no match, try regex over all entries
+    for (const [regex, entry] of Object.entries(section).sort(([,a],[,b])=>(b.weight??0)-(a.weight??0))) {
+      if (value.match(new RegExp(regex, "i"))) {
+        return getTypeRecursive(o, prop, entry, value);
       }
     }
   }
-  return t;
+
+  return {category: value, ...prop};
+}
+
+function getType(o) {
+  return getTypeRecursive(o, {group: 'misc', ...getIcon({"icon":"misc"})}, {match: typeData});
+}
+
+function svgToMaptalksPath(svgString) {
+  const svg = new DOMParser().parseFromString(svgString, 'image/svg+xml');
+  const g = svg.querySelector('g');
+  const path = g.querySelector('path');
+
+  const transform = g.getAttribute('transform') || '';
+  const d = path.getAttribute('d');
+  const fill = path.getAttribute('fill') || 'black';
+
+  const res = [
+    { path: d, fill },
+    { transform, path: d, fill }
+  ];
+
+  return res;
 }
 
 function markerSymbol2(o) {
   let d = 48;
   let t = getType(o);
-  let icon = t.fa;
-  let bg = t.bg;
-  let fg = t.fg;
+
+  let ip = getIcon(t);
+
+  let sprites = iconData[t.icon] && iconData[t.icon].sprites;
+
+  if (!settings.hideSprites && sprites) {
+    const sprite = sprites[1]; // either 0 (Discovered) or 1 (Undiscovered)
+    const image = `images/sprites/${sprite}.png`;
+    const size = 48;
+
+    let markerDx = 0;
+    let markerDy = 0;
+    let opacity = 1;
+
+    return {
+      markerFile   : image,
+      markerWidth  : size,
+      markerHeight : size,
+      markerDx     : markerDx,
+      markerDy     : markerDy,
+      markerOpacity: opacity,
+      markerVerticalAlignment: 'middle',
+    };
+  }
+
+/*
+  if (sprite) {
+    const shape = sprite.shapes[0];
+    const svg = shapes[`${shape}`];
+
+    const [w1,h1] = [32, 32];
+
+    const s = 16;
+
+    return {
+      markerType: 'path',
+      markerPath : svgToMaptalksPath(svg),
+
+      markerPathWidth : w1,
+      markerPathHeight : h1,
+      markerLineColor : 12,
+
+      markerWidth: w1*d/s,
+      markerHeight: h1*d/s,
+
+      markerDy : 0,
+      markerDx : 0
+    };
+  }
+*/
+
+
+  let [fa,bg,fg] = [ip.fa, ip.bg, ip.fg];
+
+  //console.log('icon', icon, FontAwesome.icon({ iconName: icon }) );
 
   let [w1,h1,[s1],c1,p1] = FontAwesome.icon({ iconName: 'location-pin' }).icon;
 
   // mark all persons with quests
-  if (icon=='person' && !o.quests ) {
-    icon = 'person-walking';
+  if (fa=='person' && !o.quests ) {
+    fa = 'person-walking';
   }
 
   // mark non-teleport doors
-  if ((icon=='door-open') && o.keys) {
-    icon='door-closed';
+  if ((fa=='door-open') && o.keys) {
+    fa='door-closed';
   }
 
-
-  if (!(fa = FontAwesome.icon({ iconName: icon }))) {
-    fa = FontAwesome.icon({ icon: 'circle-question' });
+  let icon = {};
+  if (!(icon = FontAwesome.icon({ iconName: fa }))) {
+    icon = FontAwesome.icon({ icon: 'circle-question' });
   }
 
-  let [w2,h2,[s2],c2,p2] = fa.icon;
+  let [w2,h2,[s2],c2,p2] = icon.icon;
 
   let k = 0.45;
 
@@ -572,8 +679,8 @@ function itemArea(o) {
 
 let itemLocation = o => ((area = itemArea(o)) && (maps[area] && maps[area].name) || area) + ( (cell = (o.cell && o.cell_name)) ? ' (' + cell + ')' : '');
 let itemDescription = o=> itemName(o) + ' (' + itemTypeExtended(o) + ')';
-let itemType = o => getType(o).type;
-let itemTypeExtended = o => {t = getType(o); return t.subtype ? t.type + ' / ' + t.subtype : t.type; } 
+let itemType = o => getType(o).category;
+let itemTypeExtended = o => {t = getType(o); return [t.group,t.category,t.item].filter(Boolean).map(capitalize).join(' / '); }
 let human = s=>s.replace(/([A-Z]+|[\d]+)/g, ' $1').replace(/^ /, ''); // camel case to space-separated
 let plural = (x,s)=> x + ' ' +(x>1 ? (s.endsWith('y') ? s.slice(0,-1)+'ies' : (s.endsWith('ch') ? s+'es' : s+'s')) : s);
 
@@ -623,7 +730,7 @@ function markItems() {
     let o = marker.properties;
     let t = getType(o);
     marker.updateSymbol({markerOpacity: settings.markedItems[o.ref_id] ? 0.25 : 1 });
-    let hide = !settings.activeItems[t.type];
+    let hide = !settings.activeItems[t.category];
     if (settings.hideFound && settings.markedItems[o.ref_id]) hide = true;
     hide ? marker.hide() : marker.show();
   }
@@ -662,9 +769,9 @@ function updateTracking() {
     let o = marker.properties;
     let t = getType(o);
     let found = settings.markedItems[o.ref_id];
-    total[t.type] = (total[t.type] || 0) + 1;
-    marked[t.type] = (marked[t.type] || 0) + (found ? 1 : 0);
-    cached_types[t.type] = {...cached_types[t.type], ...t};
+    total[t.category] = (total[t.category] || 0) + 1;
+    marked[t.category] = (marked[t.category] || 0) + (found ? 1 : 0);
+    cached_types[t.category] = {...cached_types[t.category], ...t};
   }
 
   let notes = total['Note'] || 0;
@@ -686,8 +793,8 @@ function updateTracking() {
     let li = document.createElement('div');
     li.className = 'item';
     li.classList.add('progress-item');
-    li.alt = t.type;
-    li.title = t.type;
+    li.alt = t.category;
+    li.title = t.category;
     li.onclick = toggleTrack;
 
     if (settings.activeItems[type]!=true) {
@@ -697,15 +804,15 @@ function updateTracking() {
     let c0 = document.createElement('span');
     c0.className = 'icon';
     c0.classList.add('fa');
-    c0.classList.add('fa-'+(t.group_fa || t.fa));
+    c0.classList.add('fa-'+getIcon(t, true).fa);
 
     let c1 = document.createElement('span');
     c1.className = 'title';
-    c1.innerHTML = t.type;
+    c1.innerHTML = t.category;
 
     let c2 = document.createElement('span');
     c2.className = 'counter';
-    c2.innerHTML = (marked[t.type] || 0) + '/' + (total[t.type] || 0);
+    c2.innerHTML = (marked[t.category] || 0) + '/' + (total[t.category] || 0);
 
     let c3 = document.createElement('div');
     c3.className = 'progress-item-remove';
@@ -799,7 +906,7 @@ function findLocation(text) {
       let o = marker.properties;
       let base = [o.title, o.form_id, canonical(o.form_id)].map(s=>s ? s.toLowerCase():'')
       let scramble = [...split(o.title), itemType(o), itemLocation(o)].map(s=>s?s.toLowerCase():'');
-      let tags = [o.title, o.description, itemType(o), itemLocation(o)].map(s=>s ? s.toLowerCase():'');
+      let tags = [o.title, o.category, itemType(o), itemLocation(o)].map(s=>s ? s.toLowerCase():'');
       if (stage==0 && (canonical(o.form_id)==canonical(name) || text==wikify(o) || base.includes(name))) return marker;
       if (stage==1 && words.every(e=>scramble.includes(e))) return marker;
       if (stage==2 && words.every(e=>tags.includes(e))) return marker;
@@ -847,7 +954,7 @@ function fuzzySearch(s, limit, threshold) {
 
     //data.push({...o, ...{display_name: itemDescription(o), custom_type: itemType(o), location: itemLocation(o), items: items, marker: marker, objectives:objectives, fragments:fragments}});
 
-    data.push({...o, ...{custom_title: itemName(o), custom_description: itemDescription(o), custom_type: itemType(o), location: itemLocation(o), items: items, marker: marker, objectives:objectives, fragments:fragments}});
+    data.push({...o, ...{custom_title: itemName(o), custom_description: itemDescription(o), custom_type: itemType(o), location: itemLocation(o), items: items, marker: marker, objectives:objectives, fragments:fragments, marker_type: o.type}});
 
   }
 
@@ -867,6 +974,7 @@ function fuzzySearch(s, limit, threshold) {
       { name: 'items', weight: 0.1 },           // Lower weight for items
       { name: 'objectives', weight: 0.01 },
       { name: 'fragments', weight: 0.01 },
+      { name: 'marker_type', weight: 0.01 },
     ],
     threshold: threshold,
     ignoreLocation: true,
@@ -879,7 +987,7 @@ function fuzzySearch(s, limit, threshold) {
   let result = fuse.search(s, { limit: limit });
 
   const cmpAlphaNum2 = (a,b) => a.localeCompare(b, 'en', { numeric: true });
-  result.sort( (a,b)=> a.score - b.score || cmpAlphaNum2(a.item.description, b.item.description) ) ;
+  result.sort( (a,b)=> a.score - b.score || cmpAlphaNum2(a.item.custom_description, b.item.custom_description) ) ;
 
   return result;
 }
@@ -1462,7 +1570,6 @@ function loadMarkers() {
       cell_doors[o.cell] = (cell_doors[o.cell]||[]);
       cell_doors[o.cell].push(feature);
     }
-
     //cc[o.cell] = o.cell_name;
   }
 
@@ -1517,13 +1624,13 @@ function loadMarkers() {
   for (feature of markers.features) {
     let o = feature.properties;
 
-    if (!o.description) continue;
+    if (!o.category && !o.title) continue;
 
     let t = getType(o);
     weights[t.group] = Math.max(weights[t.group]||0, t.group_weight);
 
     let area = itemArea(o);
-    let type = t.type;
+    let type = t.category;
 
     if (area != mapId && !(maps[mapId].regions && maps[mapId].regions[area])) continue;
 
@@ -1531,12 +1638,12 @@ function loadMarkers() {
     if (o.cell_name=='C3Delight Dev Cell') continue;
 
     // hide 'Libertalia' (since 1.02, Folon_ACTI_BarryBoatBeacon is better)
-    if (o.description=='Libertalia') continue;
+    if (o.category=='Libertalia') continue;
 
     // hide some of the location markers on the base map
     if (mapId == Object.keys(maps)[0]) {
       if (['City','Town'].includes(type) && area != mapId && o.ref_id!='07310FF5') continue; // duplicate city markers
-      if (o.description == 'Military Base' && area != 'IWMWorld') continue; // duplicate tommies base
+      if (o.type == 'Military Base' && area != 'IWMWorld') continue; // duplicate tommies base
     }
 
     // hide interior doors (?)
@@ -1551,16 +1658,18 @@ function loadMarkers() {
       c.y = Math.min(top, Math.max(bottom, c.y));
     }
 
-    cached_types[t.type] = {...cached_types[t.type], ...t};
+    cached_types[t.category] = {...cached_types[t.category], ...t};
 
     addMarker(c, o);
 
+    //break; // TODO!!!
+
     counters[t.group] = counters[t.group] || {};
-    counters[t.group][t.type] = (counters[t.group][t.type] || 0) + 1;
+    counters[t.group][t.category] = (counters[t.group][t.category] || 0) + 1;
 
     counters2[t.group] = counters2[t.group] || {};
-    counters2[t.group][t.type] = counters2[t.group][t.type] || {};
-    counters2[t.group][t.type][t.subtype] = (counters2[t.group][t.type][t.subtype] || 0) + 1;
+    counters2[t.group][t.category] = counters2[t.group][t.category] || {};
+    counters2[t.group][t.category][t.subtype] = (counters2[t.group][t.category][t.subtype] || 0) + 1;
 
     total += 1;
   }
@@ -1605,18 +1714,19 @@ function loadMarkers() {
       let li = document.createElement('div');
       li.className = 'item';
       li.classList.add('category-item');
-      li.alt = t.type;
+      li.alt = t.category;
       li.onclick = toggleItem;
 
       let c0 = document.createElement('span');
       c0.className = 'icon';
 
+      let ip = getIcon(t, true);
       c0.classList.add('fa');
-      c0.classList.add('fa-' + (t.group_fa||t.fa));
-      // c0.style.color = t.bg; // color icons
+      c0.classList.add('fa-' + ip.fa);
+      //c0.style.color = ip.bg; // color icons
 
       let c1 = document.createElement('span');
-      c1.innerHTML = t.type;
+      c1.innerHTML = t.category;
       c1.className = 'title';
 
       let c2 = document.createElement('span');
@@ -1970,7 +2080,7 @@ function updateSearchResults(text) {
     c0.className = 'icon';
 
     c0.classList.add('fa');
-    c0.classList.add('fa-'+t.fa);
+    c0.classList.add('fa-'+getIcon(t).fa);
 
     let c1 = document.createElement('span');
     c1.innerHTML = title;
@@ -2196,9 +2306,10 @@ window.onload = function(event) {
   window.requestAnimationFrame(update);
 
 
-  let promises = ['./data/types.json'].map(url=>fetch(url).then(r=>r.json()));
+  let promises = ['./data/types.json', './data/icons.json'].map(url=>fetch(url).then(r=>r.json()));
   Promise.all(promises).then(values => {
-    types = values[0];
+    typeData = values[0];
+    iconData = values[1];
     loadMap(mapId);
   }).catch(e=>{console.log(e);})
 
@@ -2258,6 +2369,14 @@ window.onload = function(event) {
       saveSettings();
     }
   }
+
+  setClass(document.querySelector('#toggle-sprites'),settings.hideSprites,'hidden');
+  document.querySelector('#toggle-sprites').onclick = function(e) {
+    settings.hideSprites = toggleClass(e.target, 'hidden');
+    saveSettings();
+    location.reload();
+  }
+
 }
 
 </script>
