@@ -561,7 +561,10 @@ function markerSymbol2(o) {
 
   if (!settings.hideSprites && sprites) {
     const sprite = sprites[1]; // either 0 (Discovered) or 1 (Undiscovered)
-    const image = `images/sprites/${sprite}.png`;
+
+    let image = `images/sprites/${sprite}.png`;
+    //let image = `scripts/export/shapes/${sprite}.svg`; // investigate proper hittest for svg
+
     const size = 48;
 
     let markerDx = 0;
