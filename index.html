@@ -500,8 +500,8 @@ function parseFAClass(faClass) {
 function getIcon(t, useCategoryIcon) {
   let iconRecord = iconData[useCategoryIcon && t.item ? (t.category_icon || t.icon) : t.icon] || {class: 'fa fa-circle-question'};
   let fa = parseFAClass(iconRecord.class).iconName;
-  let bg = t.color || iconRecord.background || 'grey';
-  let fg = iconRecord.color || 'white';
+  let bg = t.color || iconRecord.color || 'grey';
+  let fg = iconRecord.accent || 'white';
   return {fa: fa, bg :bg, fg:fg, image:iconRecord.image};
 }
 
