@@ -27,9 +27,6 @@
   <script src="../../lib/fuse/fuse.js"></script>
 </template>
 
-<script src="js/shapes.js"></script>
-<script src="js/sprites.js"></script>
-
 <script>
 document.head.appendChild(document.getElementById(location.protocol === 'file:' ? 'local' : 'remote').content.cloneNode(true));
 </script>
@@ -555,12 +552,12 @@ function markerSymbol2(o) {
 
   let ip = getIcon(t);
 
-  let sprite = sprites[t.icon];
+  let sprites = iconData[t.icon] && iconData[t.icon].sprites;
 
-  if (sprite) {
-    const shape = sprite.shapes[1]; // either 0 (Discovered) or 1 (Undiscovered)
-    const image = `sprites/${shape}.png`;
-    const size = 64;
+  if (sprites) {
+    const sprite = sprites[1]; // either 0 (Discovered) or 1 (Undiscovered)
+    const image = `sprites/${sprite}.png`;
+    const size = 48;
 
     let markerDx = 0;
     let markerDy = 0;

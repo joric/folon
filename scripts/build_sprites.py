@@ -249,7 +249,7 @@ def clean_svg(data):
     return data
 
 def build_sprites(path='export/sprites'):
-    out = {}
+    sprites = {}
 
     def build_shapes(path):
         shapes = []
@@ -267,10 +267,22 @@ def build_sprites(path='export/sprites'):
             #print(i, name)
             shapes = build_shapes(e.path)
             if len(shapes)==2:
-                out[name] = {"id": i, "shapes": shapes}
+                sprites[name] = {"id": i, "shapes": shapes}
 
-    jsondump(out, open('sprites.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=2, sort_keys=True)
+    jsondump(sprites, open('sprites.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=2, sort_keys=True)
 
+
+    icons = json.load(open('../data2/icons.json'))
+
+    for k in icons:
+        if 'image' in icons[k]:
+            del icons[k]['image']
+
+        if k in sprites:
+            #icons[k]['sprites'] = {"images": {"active": f'{sprites[k]['shapes'][0]}.png', "default": f'{sprites[k]['shapes'][1]}.png'}}
+            icons[k]['sprites'] = sprites[k]['shapes']
+
+    jsondump(icons, open('icons.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=2, sort_keys=True)
 
 if __name__ == '__main__':
     #clean_icons()
@@ -280,6 +292,6 @@ if __name__ == '__main__':
     #build_js()
 
     build_sprites()
-    build_shapes()
+    #build_shapes()
 
 
