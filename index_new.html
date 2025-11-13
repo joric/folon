@@ -501,7 +501,7 @@ function getIcon(t, useCategoryIcon) {
 }
 
 function getTypeRecursive(o, prop, data, value) {
-  const parent = Object.fromEntries(Object.entries(data).filter(([k,v]) => typeof v !== 'object'));
+  const parent = Object.fromEntries(Object.entries(data).filter(([k,v]) => typeof v !== 'object' || k=='replace'));
   prop = {...(prop.icon ? {category_icon: prop.icon} : {}), ...prop, ...parent};
 
   for (const[field, section] of Object.entries(data.match||{})) {
@@ -561,7 +561,7 @@ function markerSymbol2(o) {
 
     let markerDx = 0;
     let markerDy = 0;
-    let opacity = 0.5;
+    let opacity = 1;
 
     return {
       markerFile   : image,
