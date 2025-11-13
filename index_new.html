@@ -2015,7 +2015,7 @@ function loadMap(id, cell) {
 
   let promises = [
     markersFile,
-    './data2/regions.json',
+    './data/regions.json',
   ].map(url=>fetch(url).then(r=>r.json()));
   Promise.all(promises).then(values => {
 
