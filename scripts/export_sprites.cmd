@@ -7,7 +7,7 @@ set outdir=.\export
 
 set fo4=E:\Games\Fallout 4 GOTY
 
-rem extract swf
+rem extract swf from game archive
 
 set path=D:\Shared\Tools\Hacking\Games\Bethesda\F4SE\fallout4_tools;%path%
 
@@ -15,7 +15,7 @@ set ba2=%fo4%\data\LondonWorldSpace - Interface.ba2
 
 ba2extract.exe "%ba2%" "%outdir%" && del ba2extract.log
 
-rem export sprites
+rem export sprites from swf
 
 set path=D:\Shared\Tools\Hacking\Games\Bethesda\JPEXS;%path%
 
