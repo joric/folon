@@ -33,7 +33,7 @@ def map_symbols():
 
     # load markers
 
-    data = json.load(open('../data2/markers.json'))
+    data = json.load(open('../data/markers.json'))
     markers = set()
 
     for o in data['features']:
@@ -128,7 +128,7 @@ def convert_svg():
     #for k,v in mapping.items(): print(k, v['index'])
 
 def update_types():
-    data = json.load(open('../data2/types.json'))
+    data = json.load(open('../data/types.json'))
 
     def process(data):
         if type(data) is not dict: return
@@ -145,8 +145,8 @@ def update_types():
 
 def update_icons():
     mapping = json.load(open('swf_mapping.json'))
-    types = json.load(open('../data2/types.json'))
-    icons = json.load(open('../data2/icons.json'))
+    types = json.load(open('../data/types.json'))
+    icons = json.load(open('../data/icons.json'))
 
     def process(data):
         if type(data) is not dict: return
@@ -239,7 +239,7 @@ def build_shapes(path='export/shapes'):
     json.dump(shapes, open('shapes.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=2, sort_keys=False)
 
 def clean_icons():
-    icons = json.load(open('../data2/icons.json'))
+    icons = json.load(open('../data/icons.json'))
     for k in icons:
         if 'image' in icons[k]:
             del icons[k]['image']
@@ -272,7 +272,7 @@ def build_sprites(path='export/sprites'):
     jsondump(sprites, open('sprites.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=2, sort_keys=True)
 
 
-    icons = json.load(open('../data2/icons.json'))
+    icons = json.load(open('../data/icons.json'))
 
     for k in icons:
         if 'image' in icons[k]:
