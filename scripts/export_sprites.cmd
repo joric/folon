@@ -9,9 +9,9 @@ set outdir=.\export
 set path=D:\Shared\Tools\Hacking\Games\Bethesda\F4SE\fallout4_tools;%path%
 set path=D:\Shared\Tools\Hacking\Games\Bethesda\JPEXS;%path%
 
-set ba2="%fo4%\data\LondonWorldSpace - Interface.ba2"
-ba2extract.exe %ba2% "%outdir%"
-del ba2extract.log
+set ba2=%fo4%\data\LondonWorldSpace - Interface.ba2
+
+ba2extract.exe "%ba2%" "%outdir%" && del ba2extract.log
 
 set swf=%outdir%\Interface\Pipboy_MapPage.swf
 
