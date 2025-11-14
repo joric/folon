@@ -563,56 +563,18 @@ function markerSymbol2(o) {
     const sprite = sprites[1]; // either 0 (Discovered) or 1 (Undiscovered)
 
     let image = `images/sprites/${sprite}.png`;
+    let size = { stops: [[1, 24], [3,32], [4, 48], [8, 64]] };
+
     //let image = `scripts/export/shapes/${sprite}.svg`; // investigate proper hittest for svg
-
-    const size = 48;
-
-    let markerDx = 0;
-    let markerDy = 0;
-    let opacity = 1;
+    //let size = { stops: [[2,16], [3,24], [4, 48], [8, 128], [10,256]] };
 
     return {
       markerFile   : image,
-
-      //markerWidth  : size,
-      //markerHeight : size,
-
-      markerWidth  : { stops: [[1, 24], [3,32], [4, 48], [8, 64]] },
-      markerHeight : { stops: [[1, 24], [3,32], [4, 48], [8, 64]] },
-
-      markerDx     : markerDx,
-      markerDy     : markerDy,
-      markerOpacity: opacity,
+      markerWidth  : size,
+      markerHeight : size,
       markerVerticalAlignment: 'middle',
     };
   }
-
-/*
-  if (sprite) {
-    const shape = sprite.shapes[0];
-    const svg = shapes[`${shape}`];
-
-    const [w1,h1] = [32, 32];
-
-    const s = 16;
-
-    return {
-      markerType: 'path',
-      markerPath : svgToMaptalksPath(svg),
-
-      markerPathWidth : w1,
-      markerPathHeight : h1,
-      markerLineColor : 12,
-
-      markerWidth: w1*d/s,
-      markerHeight: h1*d/s,
-
-      markerDy : 0,
-      markerDx : 0
-    };
-  }
-*/
-
 
   let [fa,bg,fg] = [ip.fa, ip.bg, ip.fg];
 
