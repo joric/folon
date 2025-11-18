@@ -506,11 +506,11 @@ function getIcon(t, useCategoryIcon) {
 }
 
 function getType(o) {
-  function getTypeRecursive(data, obj={}) {
+  function getTypeRecursive(data, t={}) {
     const prop = Object.fromEntries(Object.entries(data).filter(([k,v]) => typeof v !== 'object' || k=='replace'));
 
     if (prop.icon && !prop.category) {
-      obj.category_icon = obj.icon;
+      t.category_icon = t.icon;
     }
 
     for (const[field, section] of Object.entries(data.match||{})) {
@@ -520,18 +520,18 @@ function getType(o) {
       // try exact match first (faster)
       const entry = section[value];
       if (entry) {
-        return getTypeRecursive(entry, {...obj, category: value, ...prop});
+        return getTypeRecursive(entry, {...t, category: value, ...prop});
       }
 
       // no match, try regex over presorted entries
       for (const [regex, entry] of Object.entries(section).filter(s=>/[^A-Za-z0-9_]/.test(s)).sort(([,a],[,b])=>(b.weight??0)-(a.weight??0))) {
         if (value.match(new RegExp(regex, "i"))) {
-          return getTypeRecursive(entry, {...obj, category: value, ...prop});
+          return getTypeRecursive(entry, {...t, category: value, ...prop});
         }
       }
 
     }
-    return {...obj, ...prop};
+    return {...t, ...prop};
   }
 
   return getTypeRecursive(typeData);
