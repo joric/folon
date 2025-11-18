@@ -249,7 +249,8 @@ def clean_svg(data):
     return data
 
 def build_sprites(path='export/sprites'):
-    sprites = {}
+
+    # save sprites
 
     def build_shapes(path):
         shapes = []
@@ -259,6 +260,8 @@ def build_sprites(path='export/sprites'):
             if m:
                 shapes.append(int(m[1]))
         return shapes
+
+    sprites = {}
 
     for e in sorted(os.scandir(path), key=lambda e: natural_key(e.name)):
         m = re.match(r'DefineSprite_(\d+)_(\w+Marker)', e.name)
@@ -271,6 +274,7 @@ def build_sprites(path='export/sprites'):
 
     jsondump(sprites, open('sprites.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=2, sort_keys=True)
 
+    # update icons
 
     icons = json.load(open('../data/icons.json'))
 
@@ -292,6 +296,6 @@ if __name__ == '__main__':
     #build_js()
 
     build_sprites()
-    #build_shapes()
+    build_shapes()
 
 
