@@ -648,7 +648,7 @@ function itemArea(o) {
   }
 }
 
-let itemLocation = o => ((area = itemArea(o)) && (maps[area] && maps[area].name) || area) + ( (cell = (o.cell && o.cell_name)) ? ' (' + cell + ')' : '');
+let itemLocation = o => ((area = itemArea(o)) && (maps[area] && maps[area].name) || area) + ( (cell = (o.cell && markers.cells[o.cell])) ? ' (' + cell + ')' : '');
 let itemDescription = o=> itemName(o) + ' (' + itemTypeExtended(o) + ')';
 let itemType = o => getType(o).category;
 let itemTypeExtended = o => {t = getType(o); return [t.group,t.category,t.item].filter(Boolean).map(capitalize).join(' / '); }
@@ -1606,7 +1606,7 @@ function loadMarkers() {
     if (area != mapId && !(maps[mapId].regions && maps[mapId].regions[area])) continue;
 
     // hide dev cell
-    if (o.cell_name=='C3Delight Dev Cell') continue;
+    if (markers.cells[o.cell]=='C3Delight Dev Cell') continue;
 
     // hide 'Libertalia' (since 1.02, Folon_ACTI_BarryBoatBeacon is better)
     if (o.category=='Libertalia') continue;
