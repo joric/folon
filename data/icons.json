@@ -97,6 +97,7 @@
   "container": {"color": "darkolivegreen","class": "fa fa-box-archive"},
   "crowbar": {"color": "tomato","class": "fa fa-baseball-bat-ball"},
   "cutethulhu": {"color": "darkslategrey","class": "fa fa-virus"},
+  "cutethulhurare": {"color": "red","class": "fa fa-virus"},
   "cutethulhu_activator": {"color": "darkslategrey","class": "fa fa-square-virus"},
   "dog_food": {"color": "chocolate","class": "fa fa-shield-dog"},
   "eastminster": {"color": "tan","class": "fa fa-question-circle"},

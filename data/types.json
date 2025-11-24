@@ -3,12 +3,12 @@
   "group": "misc",
   "match": {
     "description": {
-      "Note": { "category": "Note", "group": "custom", "group_weight": -10000, "icon": "note" }
+      "Note": { "category": "Note", "group": "custom", "weight": -10000, "icon": "note" }
     },
     "signature": {
       "ACTI": {
         "group": "misc",
-        "group_weight": 1000,
+        "weight": 1000,
         "match": {
           "editor_id": {
             "DN011OverdueBookVendMachine": { "category": "Book Terminal", "icon": "book_terminal" },
@@ -129,6 +129,7 @@
         "match": {
           "editor_id": {
             "Folon_MiscCuteThulhu": { "category": "CuteThulhu", "icon": "cutethulhu" },
+            "Folon_MiscCuteThulhuRare": { "category": "CuteThulhu", "icon": "cutethulhurare", "item": "CuteThulhu Rare" },
             "Folon_MiscFeatherPeacock": { "category": "Feather", "icon": "ingestible" },
             ".*BobbleHead_": { "category": "Coaster", "icon": "coaster" },
             ".*HymnBook": { "category": "Book", "icon": "book" },
@@ -138,11 +139,11 @@
           }
         }
       },
-      "NOTE": { "category": "Holotape", "group": "items", "group_weight": 1000, "icon": "holotape" },
+      "NOTE": { "category": "Holotape", "group": "items", "weight": 1000, "icon": "holotape" },
       "NPC_": {
         "category": "Uncategorized",
         "group": "NPCs",
-        "group_weight": 860,
+        "weight": 860,
         "icon": "npc",
         "match": {
           "editor_id": {
@@ -154,7 +155,7 @@
             "Folon_NPC_Angel.*": { "category": "Angels", "color": "lightgrey" },
             "Folon_NPC_Camelot.*": { "category": "Camelot", "color": "orange" },
             "Folon_NPC_Companion.*": { "category": "Companion", "icon": "companion" },
-            "Folon_NPC_DogCompanion.*": { "category": "Companion", "icon": "companion-dog" },
+            "Folon_NPC_DogCompanion.*": { "category": "Companion", "icon": "companion-dog", "title": "Churchill" },
             "Folon_NPC_Gentry.*": { "category": "Gentry", "color": "mediumpurple" },
             "Folon_NPC_Hooligan.*": { "category": "Hooligans", "color": "tomato" },
             "Folon_NPC_IODS.*": { "category": "Isle of Dogs", "color": "royalblue" },
@@ -169,7 +170,7 @@
       },
       "STAT": {
         "group": "markers",
-        "group_weight": -1000,
+        "weight": -1000,
         "match": {
           "type": {
             "Airfield": { "icon": "AirfieldMarker" },

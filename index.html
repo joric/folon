@@ -20,11 +20,13 @@
 <template id="remote">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/js/all.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+  <script src="https://joric.github.io/maps/src/plugins/types-plugin/types-plugin.js"></script>
 </template>
 
 <template id="local">
   <script src="../../lib/font-awesome/js/all.min.js"></script>
   <script src="../../lib/fuse/fuse.js"></script>
+  <script src="../../src/plugins/types-plugin/types-plugin.js"></script>
 </template>
 
 <script>
@@ -470,25 +472,6 @@ function createMap() {
 }
 
 
-function itemText(text, o, noindex=true) {
-  let t = getType(o);
-
-  if (t.title) text = t.title;
-
-  for (let [reg, rep] of Object.entries(t.replace||{})) {
-    if (noindex && rep.includes('{index}')) return text;
-    let index = o.editor_id.match(/^.*(\d\d)$/);
-    if (index) rep = rep.replace('{index}', parseInt(index[1]));
-    text = text.replace(new RegExp(reg,'g'), rep);
-  }
-
-  return text.trim();
-}
-
-function itemName(o) {
-  return itemText( o.door_name || o.title || 'Unnamed', o, false);
-}
-
 function parseFAClass(faClass) {
   const parts = faClass.trim().split(/\s+/);
   const prefix = parts.find(p => p.startsWith('fa-') || p === 'fa')?.replace('fa-', '') || 'solid';
@@ -497,8 +480,8 @@ function parseFAClass(faClass) {
   return { prefix: prefixMap[prefix] || 'fas', iconName };
 }
 
-function getIcon(t, useCategoryIcon) {
-  let iconRecord = iconData[useCategoryIcon && t.item ? (t.category_icon || t.icon) : t.icon] || {class: 'fa fa-circle-question'};
+function getIcon(t, getCategoryIcon) {
+  let iconRecord = iconData[getCategoryIcon && t.item ? (t.category_icon || t.icon) : t.icon] || {class: 'fa fa-circle-question'};
   let fa = parseFAClass(iconRecord.class).iconName;
   let bg = t.color || iconRecord.color || 'grey';
   let fg = iconRecord.accent || 'white';
@@ -535,6 +518,25 @@ function getType(o) {
   }
 
   return getTypeRecursive(typeData);
+}
+
+function itemText(text, o, noindex=true) {
+  let t = getType(o);
+
+  if (t.title) text = t.title;
+
+  for (let [reg, rep] of Object.entries(t.replace||{})) {
+    if (noindex && rep.includes('{index}')) return text;
+    let index = o.editor_id.match(/^.*(\d\d)$/);
+    if (index) rep = rep.replace('{index}', parseInt(index[1]));
+    text = text.replace(new RegExp(reg,'g'), rep);
+  }
+
+  return text.trim();
+}
+
+function itemName(o) {
+  return itemText( o.door_name || o.title || 'Unnamed', o, false);
 }
 
 function svgToMaptalksPath(svgString) {
@@ -1044,6 +1046,7 @@ function popupOnClick(e) {
 
       //if (section=='doors') console.log(form_id, markers[section], markers[section][form_id]);
 
+
       let editor_id = markers[section][form_id].editor_id || form_id;
       let name = markers[section][form_id].name || editor_id;
       let desc = markers[section][form_id].description;
@@ -1082,7 +1085,8 @@ function popupOnClick(e) {
 
       if (is_scripted[form_id]) title += ' (quest item)';
 
-      a.textContent = itemText(title, o);
+      a.textContent = title; //itemText(title, o); // can't really use itemText here, because of global "title"
+
       a.href = wikiPrefix + encodeURIComponent(itemText(name, o));
       a.onclick = function(e) { if (!e.ctrlKey) {copyToClipboard(section=='quests' ? editor_id : form_id); return false;} };
 
@@ -1592,13 +1596,20 @@ function loadMarkers() {
   let weights = {};
   let total = 0;
 
+  getType = getType2;
+
+  console.time('creating markers');
+
   for (feature of markers.features) {
     let o = feature.properties;
 
     if (!o.category && !o.title) continue;
 
     let t = getType(o);
-    weights[t.group] = Math.max(weights[t.group]||0, t.group_weight);
+    weights[t.group] = Math.max(weights[t.group]||0, t.weight||0);
+
+    //if (t.group_weight) console.log(t.group, t.group_weight, 'recorded', Math.max(weights[t.group]||0, t.group_weight));
+
 
     let area = itemArea(o);
     let type = t.category;
@@ -1606,7 +1617,8 @@ function loadMarkers() {
     if (area != mapId && !(maps[mapId].regions && maps[mapId].regions[area])) continue;
 
     // hide dev cell
-    if (markers.cells[o.cell]=='C3Delight Dev Cell') continue;
+    //if (markers.cells[o.cell]=='C3Delight Dev Cell' || markers.cells[o.cell]=='Asset Cell') continue;
+    if (o.cell=="070A5CE8") continue;
 
     // hide 'Libertalia' (since 1.02, Folon_ACTI_BarryBoatBeacon is better)
     if (o.category=='Libertalia') continue;
@@ -1640,10 +1652,14 @@ function loadMarkers() {
 
     counters2[t.group] = counters2[t.group] || {};
     counters2[t.group][t.category] = counters2[t.group][t.category] || {};
-    counters2[t.group][t.category][t.subtype] = (counters2[t.group][t.category][t.subtype] || 0) + 1;
+    counters2[t.group][t.category][t.item] = (counters2[t.group][t.category][t.item] || 0) + 1;
 
     total += 1;
   }
+
+  console.timeEnd('creating markers');
+
+  //console.log(weights);
 
   //console.log(cells);
 
