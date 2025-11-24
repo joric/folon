@@ -54,7 +54,7 @@
         "icon": "message",
         "match": {
           "editor_id": {
-            ".*Card": { "category": "Visiting Card", "group": "items", "icon": "visiting_card" },
+            ".*Card": { "category": "Message", "group": "items", "icon": "visiting_card", "item": "Visiting Card" },
             ".*Folon_BOOK_Mag": { "category": "Coaster", "icon": "coaster" },
             ".*Newspaper": { "category": "Newspaper", "icon": "newspaper" },
             ".*PerkMag": {
