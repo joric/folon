@@ -101,8 +101,8 @@
         "icon": "workbench",
         "match": {
           "editor_id": {
-            ".*(GroundLay|Bed)": { "category": "Bed", "category_icon": "bed", "icon": "bed", "item": "Bed", "weight":-1 },
-            ".*Mattress": { "category": "Bed", "category_icon": "bed", "icon": "bed-mattress", "item": "Mattress" },
+            "(GroundLay|Bed)": { "category": "Bed", "category_icon": "bed", "icon": "bed", "item": "Regular Bed", "weight":-1 },
+            "(Mattress|BedGround)": { "category": "Bed", "category_icon": "bed", "icon": "bed-mattress", "item": "Mattress" },
             ".*SleepingBag": { "category": "Bed", "category_icon": "bed", "icon": "bed-sleeping-bag", "item": "Sleeping Bag" },
             ".*AmmoWorkbench": { "icon": "ammo_workbench", "item": "Ammo Workbench" },
             ".*Folon_WorkbenchRebreather": { "icon": "rebreather", "item": "Rebreather" },
