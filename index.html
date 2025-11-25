@@ -697,12 +697,45 @@ function toggleItems(e, show, parent) {
   return false;
 }
 
+function setMarkerStatus(marker, t, found) {
+  let sprites = iconData[t.icon] && iconData[t.icon].sprites;
+  if (!settings.hideSprites && sprites) {
+    const sprite = sprites[ found ? 0 : 1];
+    let image = `images/sprites/${sprite}.png`;
+    marker.updateSymbol({markerFile: image});
+  } else {
+    marker.updateSymbol({markerOpacity: found ? 0.25 : 1 });
+  }
+}
+
+
+function toggleMarked(id) {
+  if (settings.markedItems[id]) {
+    delete settings.markedItems[id];
+  } else {
+    settings.markedItems[id] = true;
+  }
+
+  for (marker of markerLayer._geoList) {
+    let o = marker.properties;
+    if (id == o.ref_id) {
+      let found = settings.markedItems[id];
+      setMarkerStatus(marker, getType(o), found);
+      break;
+    }
+  }
+
+  updateTracking();
+  saveSettings();
+}
+
 function markItems() {
   // update markers
   for (marker of markerLayer._geoList) {
     let o = marker.properties;
     let t = getType(o);
-    marker.updateSymbol({markerOpacity: settings.markedItems[o.ref_id] ? 0.25 : 1 });
+    let found = settings.markedItems[o.ref_id];
+    setMarkerStatus(marker, t, found);
     let hide = !settings.activeItems[t.category];
     if (settings.hideFound && settings.markedItems[o.ref_id]) hide = true;
     hide ? marker.hide() : marker.show();
@@ -807,25 +840,6 @@ function updateTracking() {
     li.appendChild(c3);
     div.appendChild(li);
   }
-}
-
-function toggleMarked(id) {
-  if (settings.markedItems[id]) {
-    delete settings.markedItems[id];
-  } else {
-    settings.markedItems[id] = true;
-  }
-
-  for (marker of markerLayer._geoList) {
-    let o = marker.properties;
-    if (id == o.ref_id) {
-      let found = settings.markedItems[id];
-      marker.updateSymbol({markerOpacity: found ? 0.25 : 1 });
-      break;
-    }
-  }
-  updateTracking();
-  saveSettings();
 }
 
 function copyToClipboard(text) {
@@ -1522,6 +1536,7 @@ function addMarker(loc, o) {
   marker.setInfoWindow({autoCloseOn: 'click'})
   .on('dragend', onDragEnd)
   .on('click', popupOnClick)
+  //.on('mouseover',markerMouseOver)
   .on('contextmenu', e=> {
     if (mouseMoved) return;
     let o = e.target.properties;
