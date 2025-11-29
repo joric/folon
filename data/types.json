@@ -28,7 +28,7 @@
           "editor_id": {
             "Buffout": { "icon": "roid", "item": "Roid" },
             "Folon_Drinks": { "item": "Drink" },
-            "Folon_FoodDog": { "icon": "dog_food", "item": "Dog Food" },
+            "Folon_FoodDog.*": { "icon": "dog_food", "item": "Dog Food" },
             "Mentats": { "icon": "clarity", "item": "Clarity" },
             "Psycho": { "icon": "hyp_o", "item": "Hyp-O" },
             "RadX": { "icon": "rad_x", "item": "Rad-X" },
