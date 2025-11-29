@@ -20,14 +20,14 @@
 <template id="remote">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/js/all.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
-  <script src="https://joric.github.io/maps/src/plugins/types-plugin/types-plugin.js"></script>
 </template>
 
 <template id="local">
   <script src="../../lib/font-awesome/js/all.min.js"></script>
   <script src="../../lib/fuse/fuse.js"></script>
-  <script src="../../src/plugins/types-plugin/types-plugin.js"></script>
 </template>
+
+<script src="js/maps.js"></script>
 
 <script>
 document.head.appendChild(document.getElementById(location.protocol === 'file:' ? 'local' : 'remote').content.cloneNode(true));
