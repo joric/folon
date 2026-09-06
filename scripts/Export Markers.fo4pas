@@ -231,6 +231,7 @@ begin
             and (rid <> $0001D698) // doge
             and (rid <> $000EAFB6) // ghoul
             and (rid <> $0715650D) // atkins robot (camelot companion)
+            and (rid <> $000359F4) // mr handy
             then continue;
 
           end else continue;

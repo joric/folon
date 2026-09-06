@@ -72050,6 +72050,63 @@
 			"geometry": {
 				"type": "Point",
 				"coordinates": [
+					5892,
+					2000,
+					392
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Mr. Gutsy Guard",
+				"ref_id": "0725BAEE",
+				"form_id": "072556E0",
+				"editor_id": "Folon_NPC_LambethUSEmbassyMrGutsyGuard",
+				"cell": "0715AEE8"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					5508,
+					2228,
+					904
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Mr. Gutsy Guard",
+				"ref_id": "0725BAEF",
+				"form_id": "072556E0",
+				"editor_id": "Folon_NPC_LambethUSEmbassyMrGutsyGuard",
+				"cell": "0715AEE8"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					5168.318359,
+					2319.56958,
+					392.363159
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Mr. Gutsy Guard",
+				"ref_id": "0725BAF0",
+				"form_id": "072556E0",
+				"editor_id": "Folon_NPC_LambethUSEmbassyMrGutsyGuard",
+				"cell": "0715AEE8"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
 					-23720.138672,
 					-412.800781,
 					2024
@@ -81571,6 +81628,25 @@
 			"geometry": {
 				"type": "Point",
 				"coordinates": [
+					54.591637,
+					-994.440186,
+					0.827906
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Cadbury",
+				"ref_id": "07301721",
+				"form_id": "0730167D",
+				"editor_id": "Folon_NPC_GentryCadbury",
+				"cell": "07125D37"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
 					3786.044434,
 					-36068.5625,
 					-386.625916
@@ -85559,6 +85635,44 @@
 			"geometry": {
 				"type": "Point",
 				"coordinates": [
+					-33664.191406,
+					-8879.010742,
+					5075.345215
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Ibn Sina",
+				"ref_id": "0731EEBE",
+				"form_id": "0731C3C5",
+				"editor_id": "Folon_NPC_AhmedMrHandy_withFlamer",
+				"area": "LondonWorld"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					22497.371094,
+					-69904.71875,
+					5503.391113
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Scout Mr Recce \"Blob\"",
+				"ref_id": "07334604",
+				"form_id": "0731C3C9",
+				"editor_id": "Folon_NPC_TommyScout013Blob",
+				"area": "LondonWorld"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
 					-1488,
 					-5104,
 					1296
@@ -87877,6 +87991,196 @@
 			"geometry": {
 				"type": "Point",
 				"coordinates": [
+					-50880.042969,
+					6330.716797,
+					5063.800293
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Mr Recce",
+				"ref_id": "0733D2AA",
+				"form_id": "07334666",
+				"editor_id": "Folon_NPC_TommyRecceMrHandy",
+				"area": "LondonWorld"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					-50175.710938,
+					5405.236816,
+					5064
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Mr Recce",
+				"ref_id": "0733D2AC",
+				"form_id": "07334666",
+				"editor_id": "Folon_NPC_TommyRecceMrHandy",
+				"area": "LondonWorld"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					-50125.210938,
+					5210.330078,
+					5064
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Mr Recce",
+				"ref_id": "0733D2AE",
+				"form_id": "07334666",
+				"editor_id": "Folon_NPC_TommyRecceMrHandy",
+				"area": "LondonWorld"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					-55368.722656,
+					-85603.390625,
+					5062.713379
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Mr Recce",
+				"ref_id": "0733D313",
+				"form_id": "07334666",
+				"editor_id": "Folon_NPC_TommyRecceMrHandy",
+				"area": "LondonWorld"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					-55405.675781,
+					-6755.317383,
+					5084.021484
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Mr Recce",
+				"ref_id": "0733D350",
+				"form_id": "07334666",
+				"editor_id": "Folon_NPC_TommyRecceMrHandy",
+				"area": "LondonWorld"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					-55872.496094,
+					-5258.196289,
+					5077.478027
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Mr Recce",
+				"ref_id": "0733D351",
+				"form_id": "07334666",
+				"editor_id": "Folon_NPC_TommyRecceMrHandy",
+				"area": "LondonWorld"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					-54303.414062,
+					-6131.325684,
+					5078.740723
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Mr Recce",
+				"ref_id": "0733D352",
+				"form_id": "07334666",
+				"editor_id": "Folon_NPC_TommyRecceMrHandy",
+				"area": "LondonWorld"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					-55274.679687,
+					-5531.896484,
+					5080.347168
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Mr Recce",
+				"ref_id": "0733D353",
+				"form_id": "07334666",
+				"editor_id": "Folon_NPC_TommyRecceMrHandy",
+				"area": "LondonWorld"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					-55184.273437,
+					-5427.562988,
+					5080.347168
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Mr Recce",
+				"ref_id": "0733D354",
+				"form_id": "07334666",
+				"editor_id": "Folon_NPC_TommyRecceMrHandy",
+				"area": "LondonWorld"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					-56397.613281,
+					-5174.693848,
+					5066.816406
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Mr Recce",
+				"ref_id": "0733D362",
+				"form_id": "07334666",
+				"editor_id": "Folon_NPC_TommyRecceMrHandy",
+				"area": "LondonWorld"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
 					91749.5625,
 					39515.390625,
 					5078.157715
@@ -88858,6 +89162,25 @@
 				"outfits": [
 					"07299881"
 				],
+				"area": "WestminsterWorld"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					6863.620117,
+					3047.455078,
+					-215.516068
+				]
+			},
+			"properties": {
+				"signature": "NPC_",
+				"title": "Scissorhandy",
+				"ref_id": "07337676",
+				"form_id": "0733741C",
+				"editor_id": "Folon_NPC_GentryScissorHandy",
 				"area": "WestminsterWorld"
 			}
 		},
