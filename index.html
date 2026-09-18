@@ -1533,7 +1533,7 @@ function addMarker(loc, o) {
     showTimeout: 50
   }).addTo(marker);
 
-  marker.setInfoWindow({autoCloseOn: 'click'})
+  marker.setInfoWindow({autoCloseOn: 'click', animation: false})
   .on('dragend', onDragEnd)
   .on('click', popupOnClick)
   //.on('mouseover',markerMouseOver)
