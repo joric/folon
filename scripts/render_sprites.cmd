@@ -11,6 +11,12 @@ for %%F in (.\export\shapes\*.svg) do (
     -fill "rgba(255,255,255,0.01)" -opaque none ^
     -fill "rgba(0,0,0,0)" -draw "color 0,0 floodfill" ^
     -fill "rgba(0,0,0,0)" -draw "color 63,63 floodfill" ^
+
+    -write mpr:orig ^
+    -alpha extract -morphology Dilate Square:1 ^
+    -background black -alpha shape ^
+    mpr:orig -compose Over -composite ^
+
     "..\images\sprites\%%~nF.png"
 )
 
