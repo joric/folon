@@ -2,6 +2,9 @@
   "icon": "misc",
   "group": "misc",
   "match": {
+    "type": {
+      "regionMarker": { "category": "region", "group": "region" }
+    },
     "description": {
       "Note": { "category": "Note", "group": "custom", "weight": -10000, "icon": "note" }
     },
