@@ -3,7 +3,7 @@
   "group": "misc",
   "match": {
     "type": {
-      "regionMarker": { "category": "region", "group": "region" }
+      "regionMarker": { "category": "region", "group": "regions" }
     },
     "description": {
       "Note": { "category": "Note", "group": "custom", "weight": -10000, "icon": "note" }
