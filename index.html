@@ -1522,11 +1522,15 @@ function addNote(e, title) {
 }
 
 function addMarker(loc, o) {
+
+  let draggable = o.ref_id && o.ref_id.startsWith('FF');
+
   let marker = new maptalks.Marker(loc, {
     properties: o,
     content: itemName(o),
     symbol: markerSymbol(o),
-    draggable: o.ref_id && o.ref_id.startsWith('FF'),
+    draggable: draggable,
+    cursor: draggable ? 'move' : 'pointer',
   }).addTo(markerLayer);
 
   const tooltip = new maptalks.ui.ToolTip( itemDescription(o) + ' in ' + itemLocation(o), {
