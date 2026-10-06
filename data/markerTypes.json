@@ -242,11 +242,11 @@
           "match": { "editor_id": { "Folon_SettlementWorkbench": { "category": "Workshop", "icon": "workshop" } } }
         },
         "DOOR": {
-          "category": "Door",
+          "category": "Exterior Door",
           "group": "misc",
           "icon": "exterior_door",
           "match": {
-            "cell": { ".+": { "category": "Door", "icon": "interior_door", "item": "Interior Door" } },
+            "cell": { "^0.*": { "category": "Door", "icon": "interior_door", "category": "Interior Door" } },
             "editor_id": { "AutoloadDoor": { "category": "Autoload Door", "icon": "autoload_door" } }
           }
         },

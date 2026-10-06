@@ -5,13 +5,12 @@
     "worlds": {
       "LondonWorld": {
         "name": "London",
-
-        "baseLayers": [{
+        "layers": [{
+          "name": "LondonWorld",
           "bounds": {"left": -131072, "top": 131072, "right": 131072, "bottom": -131072},
           "urlTemplate": "tiles/LondonWorld/{z}/{x}/{y}.png",
           "maxAvailableZoom": 2
         }],
-
         "regions": [
           {
             "size": 262144,
@@ -32,50 +31,51 @@
         ],
 
         "areas": {
-          "WestminsterWorld" : { "scale": 0.6, "offset": [-104300, 27900], "rotation": 0.57 },
-          "CamdenWorld": { "scale": 1, "offset": [-79000, 74000] },
-          "IslingtonWorld": { "scale": 0.95, "offset": [-26600, 66500], "rotation": 0.57 },
-          "HackneyWorld": { "scale": 0.95, "offset": [19100, 44000], "rotation": 0.78 },
-          "BankofEnglandWorld": { "scale": 1, "offset": [-32000, 35500] },
-          "BromleyGladesWorld": { "scale": 1, "offset": [0, 0] },
-          "StPaulsWorld": { "scale": 1, "offset": [3000, 0] },
-          "CoventGardenWorldSpace": { "scale": 1, "offset": [1500, -2000] },
-          "IWMWorld":{ "scale": 1, "offset": [0, 0], "hidden": true },
-          "DumpWorld":{ "scale": 1, "offset": [2000,  -2000] },
-          "BromleyPindarWorld":{ "scale": 1, "offset": [-9000, -8000] }
+          "WestminsterWorld": { "scale": 0.6, "offset": { "x": -104300, "y": 27900 }, "rotation": 0.57 },
+          "CamdenWorld": { "scale": 1, "offset": { "x": -79000, "y": 74000 } },
+          "IslingtonWorld": { "scale": 0.95, "offset": { "x": -26600, "y": 66500 }, "rotation": 0.57 },
+          "HackneyWorld": { "scale": 0.95, "offset": { "x": 19100, "y": 44000 }, "rotation": 0.78 },
+          "BankofEnglandWorld": { "scale": 1, "offset": { "x": -32000, "y": 35500 } },
+          "BromleyGladesWorld": { "scale": 1, "offset": { "x": 0, "y": 0 } },
+          "StPaulsWorld": { "scale": 1, "offset": { "x": 3000, "y": 0 } },
+          "CoventGardenWorldSpace": { "scale": 1, "offset": { "x": 1500, "y": -2000 } },
+          "IWMWorld": { "scale": 1, "offset": { "x": 0, "y": 0 }, "hidden": true },
+          "DumpWorld": { "scale": 1, "offset": { "x": 2000, "y": -2000 } },
+          "BromleyPindarWorld": { "scale": 1, "offset": { "x": -9000, "y": -8000 } }
         }
       },
 
-      "WestminsterWorld": { "name": "Westminster", "scale": 1.9, "offset": [7000, 22000],
+      "WestminsterWorld": { "name": "Westminster", "scale": 1.9, "offset": { "x": 7000, "y": 22000 },
         "baseLayers": [{
           "urlTemplate": "tiles/WestminsterWorld/{z}/{x}/{y}.png",
           "maxAvailableZoom": 2
         }]
       },
-      "IslingtonWorld": { "name": "Islington", "scale": 3.82, "offset": [0, -47500],
+      "IslingtonWorld": { "name": "Islington", "scale": 3.82, "offset": { "x": 0, "y": -47500 },
         "baseLayers": [{
           "urlTemplate": "tiles/IslingtonWorld/{z}/{x}/{y}.png",
           "maxAvailableZoom": 2
         }]
       },
-      "HackneyWorld" : { "name": "Hackney", "scale": 3.77, "offset": [-77500, -63000],
+      "HackneyWorld": { "name": "Hackney", "scale": 3.77, "offset": { "x": -77500, "y": -63000 },
         "baseLayers": [{
           "urlTemplate": "tiles/HackneyWorld/{z}/{x}/{y}.png",
           "maxAvailableZoom": 2
         }]
       },
-      "CamdenWorld": { "name": "Camden", "scale": 3.77, "offset": [15000, -126000],
+      "CamdenWorld": { "name": "Camden", "scale": 3.77, "offset": { "x": 15000, "y": -126000 },
         "baseLayers": [{
           "urlTemplate": "tiles/CamdenWorldWorld/{z}/{x}/{y}.png",
           "maxAvailableZoom": 2
         }]
       },
-      "BankofEnglandWorld": {"name":"Bank of England", "scale": 3.77, "offset": [6000, 4800],
+      "BankofEnglandWorld": { "name": "Bank of England", "scale": 3.77, "offset": { "x": 6000, "y": 4800 },
         "baseLayers": [{
           "urlTemplate": "tiles/BankofEnglandWorld/{z}/{x}/{y}.png",
           "maxAvailableZoom": 2
         }]
       },
+
       "CoventGardenWorldSpace": { "name":"Covent Garden", "hidden": true },
       "BromleyGladesWorld": { "name": "Bromley Glades", "hidden": true },
       "StPaulsWorld": { "name": "St Pauls", "hidden": true },
